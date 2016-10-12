@@ -133,6 +133,7 @@ const DropdownMenu = React.createClass({
       onMouseDown={preventDefaultEvent}
     >
       {this.renderMenu()}
+      {this.props.dropdownFooter ? this.props.dropdownFooter : null}
     </div>);
   },
 });

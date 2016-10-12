@@ -40,6 +40,7 @@ const SelectTrigger = React.createClass({
     prefixCls: PropTypes.string,
     popupClassName: PropTypes.string,
     children: PropTypes.any,
+    dropdownFooter:PropTypes.any
   },
 
   componentDidUpdate() {
@@ -72,6 +73,7 @@ const SelectTrigger = React.createClass({
       value={props.value}
       defaultActiveFirstOption={props.defaultActiveFirstOption}
       dropdownMenuStyle={props.dropdownMenuStyle}
+      dropdownFooter={props.dropdownFooter}
     />);
   },
 

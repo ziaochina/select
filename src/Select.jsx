@@ -788,6 +788,7 @@ const Select = React.createClass({
         onMenuSelect={this.onMenuSelect}
         onMenuDeselect={this.onMenuDeselect}
         ref="trigger"
+        dropdownFooter={props.dropdownFooter}
       >
         <div
           style={props.style}
