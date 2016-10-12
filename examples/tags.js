@@ -3,12 +3,12 @@ webpackJsonp([13],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(350);
+	module.exports = __webpack_require__(348);
 
 
 /***/ },
 
-/***/ 350:
+/***/ 348:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17,13 +17,13 @@ webpackJsonp([13],{
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _rcSelect = __webpack_require__(176);
+	var _ziaochinaRcSelect = __webpack_require__(173);
 	
-	var _rcSelect2 = _interopRequireDefault(_rcSelect);
+	var _ziaochinaRcSelect2 = _interopRequireDefault(_ziaochinaRcSelect);
 	
-	__webpack_require__(324);
+	__webpack_require__(322);
 	
-	var _reactDom = __webpack_require__(36);
+	var _reactDom = __webpack_require__(35);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
@@ -34,7 +34,7 @@ webpackJsonp([13],{
 	var children = [];
 	for (var i = 10; i < 36; i++) {
 	  children.push(_react2.default.createElement(
-	    _rcSelect.Option,
+	    _ziaochinaRcSelect.Option,
 	    { key: i.toString(36) + i },
 	    i.toString(36) + i
 	  ));
@@ -66,13 +66,13 @@ webpackJsonp([13],{
 	      _react2.default.createElement(
 	        'h2',
 	        null,
-	        'tags select（scroll the menu）'
+	        'tags select\uFF08scroll the menu\uFF09'
 	      ),
 	      _react2.default.createElement(
 	        'div',
 	        null,
 	        _react2.default.createElement(
-	          _rcSelect2.default,
+	          _ziaochinaRcSelect2.default,
 	          {
 	            placeholder: 'placeholder',
 	            tags: true,
@@ -81,7 +81,21 @@ webpackJsonp([13],{
 	            disabled: this.state.disabled,
 	            maxTagTextLength: 10,
 	            value: this.state.value,
-	            onChange: this.onChange
+	            onChange: this.onChange,
+	            dropdownFooter: _react2.default.createElement(
+	              'span',
+	              null,
+	              _react2.default.createElement(
+	                'button',
+	                null,
+	                'ddd'
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                null,
+	                'aaa'
+	              )
+	            )
 	          },
 	          children
 	        )

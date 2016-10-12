@@ -3,12 +3,12 @@ webpackJsonp([10],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(347);
+	module.exports = __webpack_require__(345);
 
 
 /***/ },
 
-/***/ 347:
+/***/ 345:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17,13 +17,13 @@ webpackJsonp([10],{
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _rcSelect = __webpack_require__(176);
+	var _ziaochinaRcSelect = __webpack_require__(173);
 	
-	var _rcSelect2 = _interopRequireDefault(_rcSelect);
+	var _ziaochinaRcSelect2 = _interopRequireDefault(_ziaochinaRcSelect);
 	
-	__webpack_require__(324);
+	__webpack_require__(322);
 	
-	var _reactDom = __webpack_require__(36);
+	var _reactDom = __webpack_require__(35);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
@@ -76,7 +76,7 @@ webpackJsonp([10],{
 	        'div',
 	        { style: { width: 300 } },
 	        _react2.default.createElement(
-	          _rcSelect2.default,
+	          _ziaochinaRcSelect2.default,
 	          {
 	            value: this.state.value,
 	            placeholder: 'placeholder',
@@ -89,7 +89,7 @@ webpackJsonp([10],{
 	            onChange: this.onChange
 	          },
 	          _react2.default.createElement(
-	            _rcSelect.Option,
+	            _ziaochinaRcSelect.Option,
 	            { value: '01', text: 'jack' },
 	            _react2.default.createElement(
 	              'b',
@@ -102,23 +102,23 @@ webpackJsonp([10],{
 	            )
 	          ),
 	          _react2.default.createElement(
-	            _rcSelect.Option,
+	            _ziaochinaRcSelect.Option,
 	            { value: '11', text: 'lucy' },
 	            'lucy'
 	          ),
 	          _react2.default.createElement(
-	            _rcSelect.Option,
+	            _ziaochinaRcSelect.Option,
 	            { value: '21', disabled: true, text: 'disabled' },
 	            'disabled'
 	          ),
 	          _react2.default.createElement(
-	            _rcSelect.Option,
+	            _ziaochinaRcSelect.Option,
 	            { value: '31', text: 'yiminghe' },
 	            'yiminghe'
 	          ),
 	          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(function (i) {
 	            return _react2.default.createElement(
-	              _rcSelect.Option,
+	              _ziaochinaRcSelect.Option,
 	              { key: i, text: String(i) },
 	              i
 	            );

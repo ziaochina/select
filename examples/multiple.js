@@ -3,12 +3,12 @@ webpackJsonp([6],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(343);
+	module.exports = __webpack_require__(341);
 
 
 /***/ },
 
-/***/ 343:
+/***/ 341:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17,13 +17,13 @@ webpackJsonp([6],{
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _rcSelect = __webpack_require__(176);
+	var _ziaochinaRcSelect = __webpack_require__(173);
 	
-	var _rcSelect2 = _interopRequireDefault(_rcSelect);
+	var _ziaochinaRcSelect2 = _interopRequireDefault(_ziaochinaRcSelect);
 	
-	__webpack_require__(324);
+	__webpack_require__(322);
 	
-	var _reactDom = __webpack_require__(36);
+	var _reactDom = __webpack_require__(35);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
@@ -34,9 +34,9 @@ webpackJsonp([6],{
 	var children = [];
 	for (var i = 10; i < 36; i++) {
 	  children.push(_react2.default.createElement(
-	    _rcSelect.Option,
+	    _ziaochinaRcSelect.Option,
 	    { key: i.toString(36) + i },
-	    '中文',
+	    '\u4E2D\u6587',
 	    i
 	  ));
 	}
@@ -79,7 +79,7 @@ webpackJsonp([6],{
 	      _react2.default.createElement(
 	        'h2',
 	        null,
-	        'multiple select（scroll the menu）'
+	        'multiple select\uFF08scroll the menu\uFF09'
 	      ),
 	      _react2.default.createElement(
 	        'p',
@@ -95,7 +95,7 @@ webpackJsonp([6],{
 	        'div',
 	        { style: { width: 300 } },
 	        _react2.default.createElement(
-	          _rcSelect2.default,
+	          _ziaochinaRcSelect2.default,
 	          {
 	            value: this.state.value,
 	            animation: this.state.useAnim ? 'slide-up' : null,

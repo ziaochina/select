@@ -3,12 +3,12 @@ webpackJsonp([1],{
 /***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(325);
+	module.exports = __webpack_require__(323);
 
 
 /***/ },
 
-/***/ 325:
+/***/ 323:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -17,13 +17,13 @@ webpackJsonp([1],{
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _rcSelect = __webpack_require__(176);
+	var _ziaochinaRcSelect = __webpack_require__(173);
 	
-	var _rcSelect2 = _interopRequireDefault(_rcSelect);
+	var _ziaochinaRcSelect2 = _interopRequireDefault(_ziaochinaRcSelect);
 	
-	__webpack_require__(324);
+	__webpack_require__(322);
 	
-	var _reactDom = __webpack_require__(36);
+	var _reactDom = __webpack_require__(35);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
@@ -47,7 +47,7 @@ webpackJsonp([1],{
 	    if (value) {
 	      if (value.indexOf('@') >= 0) {
 	        options = _react2.default.createElement(
-	          _rcSelect.Option,
+	          _ziaochinaRcSelect.Option,
 	          { key: value },
 	          value
 	        );
@@ -55,7 +55,7 @@ webpackJsonp([1],{
 	        options = ['gmail.com', 'yahoo.com', 'outlook.com'].map(function (domain) {
 	          var email = value + '@' + domain;
 	          return _react2.default.createElement(
-	            _rcSelect.Option,
+	            _ziaochinaRcSelect.Option,
 	            { key: email },
 	            email
 	          );
@@ -68,14 +68,14 @@ webpackJsonp([1],{
 	  },
 	  render: function render() {
 	    return _react2.default.createElement(
-	      _rcSelect2.default,
+	      _ziaochinaRcSelect2.default,
 	      {
 	        combobox: true,
 	        notFoundContent: false,
 	        style: { width: 200 },
 	        onChange: this.onChange,
 	        onSelect: this.onSelect,
-	        placeholder: '请输入账户名'
+	        placeholder: '\u8BF7\u8F93\u5165\u8D26\u6237\u540D'
 	      },
 	      this.state.options
 	    );
