@@ -22389,7 +22389,8 @@
 	        onMenuSelect: this.onMenuSelect,
 	        onMenuDeselect: this.onMenuDeselect,
 	        ref: 'trigger',
-	        dropdownFooter: props.dropdownFooter
+	        dropdownFooter: props.dropdownFooter,
+	        enableHideDropdownByClick: props.enableHideDropdownByClick
 	      },
 	      _react2.default.createElement(
 	        'div',
@@ -28808,7 +28809,9 @@
 	      value: props.value,
 	      defaultActiveFirstOption: props.defaultActiveFirstOption,
 	      dropdownMenuStyle: props.dropdownMenuStyle,
-	      dropdownFooter: props.dropdownFooter
+	      dropdownFooter: props.dropdownFooter,
+	      enableHideDropdownByClick: props.enableHideDropdownByClick,
+	      onPopupVisibleChange: props.onDropdownVisibleChange
 	    }));
 	  },
 	  getDropdownTransitionName: function getDropdownTransitionName() {
@@ -31376,6 +31379,9 @@
 	      });
 	    }
 	  },
+	  handleFooterClick: function handleFooterClick() {
+	    if (this.props.enableHideDropdownByClick) this.props.onPopupVisibleChange(false);
+	  },
 	  renderMenu: function renderMenu() {
 	    var _this = this;
 	
@@ -31469,7 +31475,11 @@
 	        onMouseDown: _util.preventDefaultEvent
 	      },
 	      this.renderMenu(),
-	      this.props.dropdownFooter ? this.props.dropdownFooter : null
+	      this.props.dropdownFooter ? _react2.default.createElement(
+	        'div',
+	        { onClick: this.handleFooterClick.bind(this) },
+	        this.props.dropdownFooter
+	      ) : null
 	    );
 	  }
 	});
