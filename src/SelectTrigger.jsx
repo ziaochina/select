@@ -74,6 +74,8 @@ const SelectTrigger = React.createClass({
       defaultActiveFirstOption={props.defaultActiveFirstOption}
       dropdownMenuStyle={props.dropdownMenuStyle}
       dropdownFooter={props.dropdownFooter}
+      enableHideDropdownByClick ={props.enableHideDropdownByClick}
+      onPopupVisibleChange={props.onDropdownVisibleChange}
     />);
   },
 

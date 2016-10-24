@@ -55,6 +55,11 @@ const DropdownMenu = React.createClass({
     }
   },
 
+  handleFooterClick(){
+    if(this.props.enableHideDropdownByClick)
+      this.props.onPopupVisibleChange(false)
+  },
+
   renderMenu() {
     const props = this.props;
     const {
@@ -133,7 +138,14 @@ const DropdownMenu = React.createClass({
       onMouseDown={preventDefaultEvent}
     >
       {this.renderMenu()}
-      {this.props.dropdownFooter ? this.props.dropdownFooter : null}
+      
+      {this.props.dropdownFooter ? 
+          <div onClick={::this.handleFooterClick}>
+            {this.props.dropdownFooter}
+          </div>: 
+          null
+      }
+      
     </div>);
   },
 });
