@@ -12,28 +12,7 @@
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
-/******/ 			var _m = moreModules[moduleId];
-/******/
-/******/ 			// Check if module is deduplicated
-/******/ 			switch(typeof _m) {
-/******/ 			case "object":
-/******/ 				// Module can be created from a template
-/******/ 				modules[moduleId] = (function(_m) {
-/******/ 					var args = _m.slice(1), templateId = _m[0];
-/******/ 					return function (a,b,c) {
-/******/ 						modules[templateId].apply(this, [a,b,c].concat(args));
-/******/ 					};
-/******/ 				}(_m));
-/******/ 				break;
-/******/ 			case "function":
-/******/ 				// Normal module
-/******/ 				modules[moduleId] = _m;
-/******/ 				break;
-/******/ 			default:
-/******/ 				// Module is a copy of another module
-/******/ 				modules[moduleId] = modules[_m];
-/******/ 				break;
-/******/ 			}
+/******/ 			modules[moduleId] = moreModules[moduleId];
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
 /******/ 		while(callbacks.length)
@@ -112,30 +91,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/ })
 /************************************************************************/
-/******/ ((function(modules) {
-	// Check all modules for deduplicated modules
-	for(var i in modules) {
-		if(Object.prototype.hasOwnProperty.call(modules, i)) {
-			switch(typeof modules[i]) {
-			case "function": break;
-			case "object":
-				// Module can be created from a template
-				modules[i] = (function(_m) {
-					var args = _m.slice(1), fn = modules[_m[0]];
-					return function (a,b,c) {
-						fn.apply(this, [a,b,c].concat(args));
-					};
-				}(modules[i]));
-				break;
-			default:
-				// Module is a copy of another module
-				modules[i] = modules[modules[i]];
-				break;
-			}
-		}
-	}
-	return modules;
-}([
+/******/ ([
 /* 0 */,
 /* 1 */,
 /* 2 */
@@ -21719,8 +21675,8 @@
 	    }
 	  },
 	  componentDidUpdate: function componentDidUpdate() {
-	    var state = this.state;
-	    var props = this.props;
+	    var state = this.state,
+	        props = this.props;
 	
 	    if (state.open && (0, _util.isMultipleOrTags)(props)) {
 	      var inputNode = this.getInputDOMNode();
@@ -21859,8 +21815,8 @@
 	    this.setInputValue(inputValue, false);
 	  },
 	  onMenuDeselect: function onMenuDeselect(_ref2) {
-	    var item = _ref2.item;
-	    var domEvent = _ref2.domEvent;
+	    var item = _ref2.item,
+	        domEvent = _ref2.domEvent;
 	
 	    if (domEvent.type === 'click') {
 	      this.removeSelected((0, _util.getValuePropValue)(item));
@@ -21913,6 +21869,7 @@
 	        _this.state.inputValue = _this.getInputDOMNode().value = '';
 	      }
 	      props.onBlur(_this.getVLForOnChange(value));
+	      _this.setOpenState(false);
 	    }, 10);
 	  },
 	  onClearSelection: function onClearSelection(event) {
@@ -21921,8 +21878,8 @@
 	    if (props.disabled) {
 	      return;
 	    }
-	    var inputValue = state.inputValue;
-	    var value = state.value;
+	    var inputValue = state.inputValue,
+	        value = state.value;
 	
 	    event.stopPropagation();
 	    if (inputValue || value.length) {
@@ -21990,8 +21947,8 @@
 	    return this.dropdownContainer;
 	  },
 	  getPlaceholderElement: function getPlaceholderElement() {
-	    var props = this.props;
-	    var state = this.state;
+	    var props = this.props,
+	        state = this.state;
 	
 	    var hidden = false;
 	    if (state.inputValue) {
@@ -22059,8 +22016,8 @@
 	  setOpenState: function setOpenState(open, needFocus) {
 	    var _this3 = this;
 	
-	    var props = this.props;
-	    var state = this.state;
+	    var props = this.props,
+	        state = this.state;
 	
 	    if (state.open === open) {
 	      this.maybeFocus(open, needFocus);
@@ -22099,8 +22056,8 @@
 	    }
 	  },
 	  updateFocusClassName: function updateFocusClassName() {
-	    var refs = this.refs;
-	    var props = this.props;
+	    var refs = this.refs,
+	        props = this.props;
 	    // avoid setState and its side effect
 	
 	    if (this._focused) {
@@ -22112,8 +22069,8 @@
 	  maybeFocus: function maybeFocus(open, needFocus) {
 	    if (needFocus || open) {
 	      var input = this.getInputDOMNode();
-	      var _document = document;
-	      var activeElement = _document.activeElement;
+	      var _document = document,
+	          activeElement = _document.activeElement;
 	
 	      if (input && (open || (0, _util.isMultipleOrTagsOrCombobox)(this.props))) {
 	        if (activeElement !== input) {
@@ -22189,16 +22146,16 @@
 	  renderTopControlNode: function renderTopControlNode() {
 	    var _this5 = this;
 	
-	    var _state = this.state;
-	    var value = _state.value;
-	    var open = _state.open;
-	    var inputValue = _state.inputValue;
+	    var _state = this.state,
+	        value = _state.value,
+	        open = _state.open,
+	        inputValue = _state.inputValue;
 	
 	    var props = this.props;
-	    var choiceTransitionName = props.choiceTransitionName;
-	    var prefixCls = props.prefixCls;
-	    var maxTagTextLength = props.maxTagTextLength;
-	    var showSearch = props.showSearch;
+	    var choiceTransitionName = props.choiceTransitionName,
+	        prefixCls = props.prefixCls,
+	        maxTagTextLength = props.maxTagTextLength,
+	        showSearch = props.showSearch;
 	
 	    var className = prefixCls + '-selection__rendered';
 	    // search input is inside topControlNode in single, multiple & combobox. 2016/04/13
@@ -22325,10 +22282,10 @@
 	    var props = this.props;
 	    var multiple = (0, _util.isMultipleOrTags)(props);
 	    var state = this.state;
-	    var className = props.className;
-	    var disabled = props.disabled;
-	    var allowClear = props.allowClear;
-	    var prefixCls = props.prefixCls;
+	    var className = props.className,
+	        disabled = props.disabled,
+	        allowClear = props.allowClear,
+	        prefixCls = props.prefixCls;
 	
 	    var ctrlNode = this.renderTopControlNode();
 	    var extraSelectionProps = {};
@@ -23694,14 +23651,14 @@
 	
 	var _symbol2 = _interopRequireDefault(_symbol);
 	
-	var _typeof = typeof _symbol2.default === "function" && typeof _iterator2.default === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default ? "symbol" : typeof obj; };
+	var _typeof = typeof _symbol2.default === "function" && typeof _iterator2.default === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj; };
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = typeof _symbol2.default === "function" && _typeof(_iterator2.default) === "symbol" ? function (obj) {
 	  return typeof obj === "undefined" ? "undefined" : _typeof(obj);
 	} : function (obj) {
-	  return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof(obj);
+	  return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default && obj !== _symbol2.default.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof(obj);
 	};
 
 /***/ },
@@ -26239,7 +26196,7 @@
 	  activeKey = null;
 	  if (props.defaultActiveFirst) {
 	    (0, _util.loopMenuItem)(children, function (c, i) {
-	      if (!activeKey && !c.props.disabled) {
+	      if (!activeKey && c && !c.props.disabled) {
 	        activeKey = (0, _util.getKeyFromChildrenIndex)(c, eventKey, i);
 	      }
 	    });
@@ -27656,7 +27613,14 @@
 	    classes[this.getDisabledClassName()] = props.disabled;
 	    classes[this.getSelectedClassName()] = this.isChildrenSelected();
 	
-	    this._menuId = this._menuId || (0, _guid2["default"])();
+	    if (!this._menuId) {
+	      if (props.eventKey) {
+	        this._menuId = props.eventKey + '$Menu';
+	      } else {
+	        this._menuId = (0, _guid2["default"])();
+	      }
+	    }
+	
 	    classes[prefixCls] = true;
 	    classes[prefixCls + '-' + props.mode] = 1;
 	    var titleClickEvents = {};
@@ -28780,9 +28744,9 @@
 	  },
 	
 	  componentDidUpdate: function componentDidUpdate() {
-	    var _props = this.props;
-	    var visible = _props.visible;
-	    var dropdownMatchSelectWidth = _props.dropdownMatchSelectWidth;
+	    var _props = this.props,
+	        visible = _props.visible,
+	        dropdownMatchSelectWidth = _props.dropdownMatchSelectWidth;
 	
 	    if (visible) {
 	      var dropdownDOMNode = this.getPopupDOMNode();
@@ -28831,16 +28795,16 @@
 	  render: function render() {
 	    var _popupClassName;
 	
-	    var _props2 = this.props;
-	    var onPopupFocus = _props2.onPopupFocus;
-	    var props = (0, _objectWithoutProperties3.default)(_props2, ['onPopupFocus']);
-	    var multiple = props.multiple;
-	    var visible = props.visible;
-	    var inputValue = props.inputValue;
-	    var dropdownAlign = props.dropdownAlign;
-	    var disabled = props.disabled;
-	    var showSearch = props.showSearch;
-	    var dropdownClassName = props.dropdownClassName;
+	    var _props2 = this.props,
+	        onPopupFocus = _props2.onPopupFocus,
+	        props = (0, _objectWithoutProperties3.default)(_props2, ['onPopupFocus']);
+	    var multiple = props.multiple,
+	        visible = props.visible,
+	        inputValue = props.inputValue,
+	        dropdownAlign = props.dropdownAlign,
+	        disabled = props.disabled,
+	        showSearch = props.showSearch,
+	        dropdownClassName = props.dropdownClassName;
 	
 	    var dropdownPrefixCls = this.getDropdownPrefixCls();
 	    var popupClassName = (_popupClassName = {}, (0, _defineProperty3.default)(_popupClassName, dropdownClassName, !!dropdownClassName), (0, _defineProperty3.default)(_popupClassName, dropdownPrefixCls + '--' + (multiple ? 'multiple' : 'single'), 1), _popupClassName);
@@ -31386,13 +31350,13 @@
 	    var _this = this;
 	
 	    var props = this.props;
-	    var menuItems = props.menuItems;
-	    var defaultActiveFirstOption = props.defaultActiveFirstOption;
-	    var value = props.value;
-	    var prefixCls = props.prefixCls;
-	    var multiple = props.multiple;
-	    var onMenuSelect = props.onMenuSelect;
-	    var inputValue = props.inputValue;
+	    var menuItems = props.menuItems,
+	        defaultActiveFirstOption = props.defaultActiveFirstOption,
+	        value = props.value,
+	        prefixCls = props.prefixCls,
+	        multiple = props.multiple,
+	        onMenuSelect = props.onMenuSelect,
+	        inputValue = props.inputValue;
 	
 	    if (menuItems && menuItems.length) {
 	      var _ret = function () {
@@ -31757,5 +31721,5 @@
 	// removed by extract-text-webpack-plugin
 
 /***/ }
-/******/ ])));
+/******/ ]);
 //# sourceMappingURL=common.js.map
