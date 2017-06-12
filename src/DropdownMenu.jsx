@@ -62,6 +62,9 @@ export default class DropdownMenu extends React.Component {
 
   handleFooterClick() {
     if (this.props.enableHideDropdownByClick) {
+      if (typeof document !== 'undefined' && document.activeElement) {
+        document.activeElement.blur();
+      }
       this.props.onPopupVisibleChange(false);
     }
   }
