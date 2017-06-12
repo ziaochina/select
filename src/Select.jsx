@@ -1,8 +1,8 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
+import createClass from 'create-react-class';
 import KeyCode from 'rc-util/lib/KeyCode';
 import classnames from 'classnames';
-import OptGroup from './OptGroup';
 import Animate from 'rc-animate';
 import classes from 'component-classes';
 import {
@@ -11,83 +11,46 @@ import {
   isSingleMode, toArray, findIndexInValueByKey,
   UNSELECTABLE_ATTRIBUTE, UNSELECTABLE_STYLE,
   preventDefaultEvent, findFirstMenuItem,
+  includesSeparators, splitBySeparators,
+  findIndexInValueByLabel,
 } from './util';
 import SelectTrigger from './SelectTrigger';
 import FilterMixin from './FilterMixin';
+import { SelectPropTypes } from './PropTypes';
 
 function noop() {
-}
-
-function filterFn(input, child) {
-  return String(getPropValue(child, this.props.optionFilterProp)).indexOf(input) > -1;
 }
 
 function saveRef(name, component) {
   this[name] = component;
 }
 
-let valueObjectShape;
-
-if (PropTypes) {
-  valueObjectShape = PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.shape({
-      key: PropTypes.string,
-      label: PropTypes.node,
-    }),
-  ]);
+function chaining(...fns) {
+  return function (...args) {
+    for (let i = 0; i < fns.length; i++) {
+      if (fns[i] && typeof fns[i] === 'function') {
+        fns[i].apply(this, args);
+      }
+    }
+  };
 }
 
-const Select = React.createClass({
-  propTypes: {
-    defaultActiveFirstOption: PropTypes.bool,
-    multiple: PropTypes.bool,
-    filterOption: PropTypes.any,
-    showSearch: PropTypes.bool,
-    disabled: PropTypes.bool,
-    allowClear: PropTypes.bool,
-    showArrow: PropTypes.bool,
-    tags: PropTypes.bool,
-    prefixCls: PropTypes.string,
-    className: PropTypes.string,
-    transitionName: PropTypes.string,
-    optionLabelProp: PropTypes.string,
-    optionFilterProp: PropTypes.string,
-    animation: PropTypes.string,
-    choiceTransitionName: PropTypes.string,
-    onChange: PropTypes.func,
-    onBlur: PropTypes.func,
-    onSelect: PropTypes.func,
-    onSearch: PropTypes.func,
-    placeholder: PropTypes.any,
-    onDeselect: PropTypes.func,
-    labelInValue: PropTypes.bool,
-    value: PropTypes.oneOfType([
-      valueObjectShape,
-      PropTypes.arrayOf(valueObjectShape),
-    ]),
-    defaultValue: PropTypes.oneOfType([
-      valueObjectShape,
-      PropTypes.arrayOf(valueObjectShape),
-    ]),
-    dropdownStyle: PropTypes.object,
-    maxTagTextLength: PropTypes.number,
-  },
+const Select = createClass({
+  propTypes: SelectPropTypes,
 
   mixins: [FilterMixin],
 
   getDefaultProps() {
     return {
       prefixCls: 'rc-select',
-      filterOption: filterFn,
       defaultOpen: false,
       labelInValue: false,
       defaultActiveFirstOption: true,
       showSearch: true,
       allowClear: false,
       placeholder: '',
-      defaultValue: [],
       onChange: noop,
+      onFocus: noop,
       onBlur: noop,
       onSelect: noop,
       onSearch: noop,
@@ -111,9 +74,10 @@ const Select = React.createClass({
       value = toArray(props.defaultValue);
     }
     value = this.addLabelToValue(props, value);
+    value = this.addTitleToValue(props, value);
     let inputValue = '';
     if (props.combobox) {
-      inputValue = value.length ? String(value[0].key) : '';
+      inputValue = value.length ? this.getLabelFromProps(props, value[0].key) : '';
     }
     this.saveInputRef = saveRef.bind(this, 'inputInstance');
     this.saveInputMirrorRef = saveRef.bind(this, 'inputMirrorInstance');
@@ -128,24 +92,34 @@ const Select = React.createClass({
     };
   },
 
+  componentWillMount() {
+    this.adjustOpenState();
+  },
+
   componentWillReceiveProps(nextProps) {
     if ('value' in nextProps) {
       let value = toArray(nextProps.value);
       value = this.addLabelToValue(nextProps, value);
+      value = this.addTitleToValue(nextProps, value);
       this.setState({
         value,
       });
       if (nextProps.combobox) {
         this.setState({
-          inputValue: value.length ? String(value[0].key) : '',
+          inputValue: value.length ? this.getLabelFromProps(nextProps, value[0].key) : '',
         });
       }
     }
   },
 
+  componentWillUpdate(nextProps, nextState) {
+    this.props = nextProps;
+    this.state = nextState;
+    this.adjustOpenState();
+  },
+
   componentDidUpdate() {
-    const { state, props } = this;
-    if (state.open && isMultipleOrTags(props)) {
+    if (isMultipleOrTags(this.props)) {
       const inputNode = this.getInputDOMNode();
       const mirrorNode = this.getInputMirrorDOMNode();
       if (inputNode.value) {
@@ -158,7 +132,9 @@ const Select = React.createClass({
   },
 
   componentWillUnmount() {
+    this.clearFocusTime();
     this.clearBlurTime();
+    this.clearAdjustTimer();
     if (this.dropdownContainer) {
       ReactDOM.unmountComponentAtNode(this.dropdownContainer);
       document.body.removeChild(this.dropdownContainer);
@@ -167,13 +143,22 @@ const Select = React.createClass({
   },
 
   onInputChange(event) {
+    const { tokenSeparators } = this.props;
     const val = event.target.value;
-    const { props } = this;
+    if (isMultipleOrTags(this.props) &&
+      tokenSeparators &&
+      includesSeparators(val, tokenSeparators)) {
+      const nextValue = this.tokenize(val);
+      this.fireChange(nextValue);
+      this.setOpenState(false, true);
+      this.setInputValue('', false);
+      return;
+    }
     this.setInputValue(val);
     this.setState({
       open: true,
     });
-    if (isCombobox(props)) {
+    if (isCombobox(this.props)) {
       this.fireChange([{
         key: val,
       }]);
@@ -181,6 +166,12 @@ const Select = React.createClass({
   },
 
   onDropdownVisibleChange(open) {
+    if (open && !this._focused) {
+      this.clearBlurTime();
+      this.timeoutFocus();
+      this._focused = true;
+      this.updateFocusClassName();
+    }
     this.setOpenState(open);
   },
 
@@ -208,11 +199,9 @@ const Select = React.createClass({
     const keyCode = event.keyCode;
     if (isMultipleOrTags(props) && !event.target.value && keyCode === KeyCode.BACKSPACE) {
       event.preventDefault();
-      const value = state.value.concat();
+      const { value } = state;
       if (value.length) {
-        const popValue = value.pop();
-        props.onDeselect(props.labelInValue ? popValue : popValue.key);
-        this.fireChange(value);
+        this.removeSelected(value[value.length - 1].key);
       }
       return;
     }
@@ -254,6 +243,7 @@ const Select = React.createClass({
       };
     }
     props.onSelect(event, item);
+    const selectedTitle = item.props.title;
     if (isMultipleOrTags(props)) {
       if (findIndexInValueByKey(value, selectedValue) !== -1) {
         return;
@@ -261,8 +251,16 @@ const Select = React.createClass({
       value = value.concat([{
         key: selectedValue,
         label: selectedLabel,
+        title: selectedTitle,
       }]);
     } else {
+      if (isCombobox(props)) {
+        this.skipAdjustOpen = true;
+        this.clearAdjustTimer();
+        this.skipAdjustOpenTimer = setTimeout(() => {
+          this.skipAdjustOpen = false;
+        }, 0);
+      }
       if (value.length && value[0].key === selectedValue) {
         this.setOpenState(false, true);
         return;
@@ -270,6 +268,7 @@ const Select = React.createClass({
       value = [{
         key: selectedValue,
         label: selectedLabel,
+        title: selectedTitle,
       }];
       this.setOpenState(false, true);
     }
@@ -293,7 +292,7 @@ const Select = React.createClass({
   onArrowClick(e) {
     e.stopPropagation();
     if (!this.props.disabled) {
-      this.setOpenState(!this.state.open, true);
+      this.setOpenState(!this.state.open, !this.state.open);
     }
   },
 
@@ -303,10 +302,17 @@ const Select = React.createClass({
     }
   },
 
-  onOuterFocus() {
+  onOuterFocus(e) {
     this.clearBlurTime();
+    if (!isMultipleOrTagsOrCombobox(this.props) && e.target === this.getInputDOMNode()) {
+      return;
+    }
+    if (this._focused) {
+      return;
+    }
     this._focused = true;
     this.updateFocusClassName();
+    this.timeoutFocus();
   },
 
   onPopupFocus() {
@@ -335,10 +341,11 @@ const Select = React.createClass({
           }
         }
       } else if (isMultipleOrTags(props) && inputValue) {
+        // why not use setState?
         this.state.inputValue = this.getInputDOMNode().value = '';
       }
       props.onBlur(this.getVLForOnChange(value));
-      this.setOpenState(false)
+      this.setOpenState(false);
     }, 10);
   },
 
@@ -371,7 +378,7 @@ const Select = React.createClass({
     }
     let label = null;
     React.Children.forEach(children, (child) => {
-      if (child.type === OptGroup) {
+      if (child.type.isSelectOptGroup) {
         const maybe = this.getLabelBySingleValue(child.props.children, value);
         if (maybe !== null) {
           label = maybe;
@@ -381,6 +388,24 @@ const Select = React.createClass({
       }
     });
     return label;
+  },
+
+  getValueByLabel(children, label) {
+    if (label === undefined) {
+      return null;
+    }
+    let value = null;
+    React.Children.forEach(children, (child) => {
+      if (child.type.isSelectOptGroup) {
+        const maybe = this.getValueByLabel(child.props.children, label);
+        if (maybe !== null) {
+          value = maybe;
+        }
+      } else if (toArray(this.getLabelFromOption(child)).join('') === label) {
+        value = getValuePropValue(child);
+      }
+    });
+    return value;
   },
 
   getLabelFromOption(child) {
@@ -396,6 +421,8 @@ const Select = React.createClass({
     if (vls !== undefined) {
       if (!this.props.labelInValue) {
         vls = vls.map(v => v.key);
+      } else {
+        vls = vls.map(vl => ({ key: vl.key, label: vl.label }));
       }
       return isMultipleOrTags(this.props) ? vls : vls[0];
     }
@@ -450,26 +477,34 @@ const Select = React.createClass({
 
   getInputElement() {
     const props = this.props;
+    const inputElement = props.getInputElement ? props.getInputElement() : <input />;
+    const inputCls = classnames(inputElement.props.className, {
+      [`${props.prefixCls}-search__field`]: true,
+    });
+    // https://github.com/ant-design/ant-design/issues/4992#issuecomment-281542159
+    // Add space to the end of the inputValue as the width measurement tolerance
     return (<div className={`${props.prefixCls}-search__field__wrap`}>
-      <input
-        ref={this.saveInputRef}
-        onChange={this.onInputChange}
-        onKeyDown={this.onInputKeyDown}
-        value={this.state.inputValue}
-        disabled={props.disabled}
-        className={`${props.prefixCls}-search__field`}
-      />
+      {React.cloneElement(inputElement, {
+        ref: this.saveInputRef,
+        onChange: this.onInputChange,
+        onKeyDown: chaining(this.onInputKeyDown, inputElement.props.onKeyDown),
+        value: this.state.inputValue,
+        disabled: props.disabled,
+        className: inputCls,
+      })}
       <span
         ref={this.saveInputMirrorRef}
         className={`${props.prefixCls}-search__field__mirror`}
       >
-        {this.state.inputValue}
+        {this.state.inputValue}&nbsp;
       </span>
     </div>);
   },
 
   getInputDOMNode() {
-    return this.inputInstance;
+    return this.topCtrlNode ?
+       this.topCtrlNode.querySelector('input,textarea,div[contentEditable]') :
+       this.inputInstance;
   },
 
   getInputMirrorDOMNode() {
@@ -507,17 +542,41 @@ const Select = React.createClass({
     });
   },
   setInputValue(inputValue, fireSearch = true) {
-    this.setState({
-      inputValue,
-    });
-    if (fireSearch) {
-      this.props.onSearch(inputValue);
+    if (inputValue !== this.state.inputValue) {
+      this.setState({
+        inputValue,
+      });
+      if (fireSearch) {
+        this.props.onSearch(inputValue);
+      }
+    }
+  },
+
+  timeoutFocus() {
+    if (this.focusTimer) {
+      this.clearFocusTime();
+    }
+    this.focusTimer = setTimeout(() => {
+      this.props.onFocus();
+    }, 10);
+  },
+
+  clearFocusTime() {
+    if (this.focusTimer) {
+      clearTimeout(this.focusTimer);
+      this.focusTimer = null;
     }
   },
   clearBlurTime() {
     if (this.blurTimer) {
       clearTimeout(this.blurTimer);
       this.blurTimer = null;
+    }
+  },
+  clearAdjustTimer() {
+    if (this.skipAdjustOpenTimer) {
+      clearTimeout(this.skipAdjustOpenTimer);
+      this.skipAdjustOpenTimer = null;
     }
   },
   updateFocusClassName() {
@@ -537,11 +596,13 @@ const Select = React.createClass({
       if (input && (open || isMultipleOrTagsOrCombobox(this.props))) {
         if (activeElement !== input) {
           input.focus();
+          this._focused = true;
         }
       } else {
         const selection = this.refs.selection;
         if (activeElement !== selection) {
           selection.focus();
+          this._focused = true;
         }
       }
     }
@@ -564,9 +625,26 @@ const Select = React.createClass({
     return value;
   },
 
+  addTitleToValue(props, values) {
+    let nextValues = values;
+    const keys = values.map(v => v.key);
+    React.Children.forEach(props.children, (child) => {
+      if (child.type.isSelectOptGroup) {
+        nextValues = this.addTitleToValue(child.props, nextValues);
+      } else {
+        const value = getValuePropValue(child);
+        const valueIndex = keys.indexOf(value);
+        if (valueIndex > -1) {
+          nextValues[valueIndex].title = child.props.title;
+        }
+      }
+    });
+    return nextValues;
+  },
+
   removeSelected(selectedKey) {
     const props = this.props;
-    if (props.disabled) {
+    if (props.disabled || this.isChildDisabled(selectedKey)) {
       return;
     }
     let label;
@@ -607,6 +685,57 @@ const Select = React.createClass({
     props.onChange(this.getVLForOnChange(value));
   },
 
+  isChildDisabled(key) {
+    return toArray(this.props.children).some(child => {
+      const childValue = getValuePropValue(child);
+      return childValue === key && child.props && child.props.disabled;
+    });
+  },
+
+  tokenize(string) {
+    const { multiple, tokenSeparators, children } = this.props;
+    let nextValue = this.state.value;
+    splitBySeparators(string, tokenSeparators).forEach(label => {
+      const selectedValue = { key: label, label };
+      if (findIndexInValueByLabel(nextValue, label) === -1) {
+        if (multiple) {
+          const value = this.getValueByLabel(children, label);
+          if (value) {
+            selectedValue.key = value;
+            nextValue = nextValue.concat(selectedValue);
+          }
+        } else {
+          nextValue = nextValue.concat(selectedValue);
+        }
+      }
+    });
+    return nextValue;
+  },
+
+  adjustOpenState() {
+    if (this.skipAdjustOpen) {
+      return;
+    }
+    let { open } = this.state;
+    if (typeof document !== 'undefined' &&
+      this.getInputDOMNode() &&
+      document.activeElement === this.getInputDOMNode()) {
+      open = true;
+    }
+    let options = [];
+    if (open) {
+      options = this.renderFilterOptions();
+    }
+    this._options = options;
+
+    if (isMultipleOrTagsOrCombobox(this.props) || !this.props.showSearch) {
+      if (open && !options.length) {
+        open = false;
+      }
+    }
+    this.state.open = open;
+  },
+
   renderTopControlNode() {
     const { value, open, inputValue } = this.state;
     const props = this.props;
@@ -631,11 +760,12 @@ const Select = React.createClass({
             showSelectedValue = true;
           }
         }
+        const singleValue = value[0];
         selectedValue = (
           <div
             key="value"
             className={`${prefixCls}-selection-selected-value`}
-            title={value[0].label}
+            title={singleValue.title || singleValue.label}
             style={{
               display: showSelectedValue ? 'block' : 'none',
               opacity,
@@ -662,16 +792,13 @@ const Select = React.createClass({
       if (isMultipleOrTags(props)) {
         selectedValueNodes = value.map((singleValue) => {
           let content = singleValue.label;
-          const title = content;
+          const title = singleValue.title || content;
           if (maxTagTextLength &&
             typeof content === 'string' &&
             content.length > maxTagTextLength) {
             content = `${content.slice(0, maxTagTextLength)}...`;
           }
-          const disabled = toArray(props.children).some(child => {
-            const childValue = getValuePropValue(child);
-            return childValue === singleValue.key && child.props && child.props.disabled;
-          });
+          const disabled = this.isChildDisabled(singleValue.key);
           const choiceClassName = disabled
             ? `${prefixCls}-selection__choice ${prefixCls}-selection__choice__disabled`
             : `${prefixCls}-selection__choice`;
@@ -714,7 +841,13 @@ const Select = React.createClass({
         innerNode = <ul>{selectedValueNodes}</ul>;
       }
     }
-    return (<div className={className}>{this.getPlaceholderElement()}{innerNode}</div>);
+    return (<div
+      className={className}
+      ref={node => this.topCtrlNode = node}
+    >
+      {this.getPlaceholderElement()}
+      {innerNode}
+    </div>);
   },
 
   render() {
@@ -724,15 +857,8 @@ const Select = React.createClass({
     const { className, disabled, allowClear, prefixCls } = props;
     const ctrlNode = this.renderTopControlNode();
     let extraSelectionProps = {};
-    let { open } = this.state;
-    let options = [];
-    if (open) {
-      options = this.renderFilterOptions();
-    }
-    this._options = options;
-    if (open && (isMultipleOrTagsOrCombobox(props) || !props.showSearch) && !options.length) {
-      open = false;
-    }
+    const { open } = this.state;
+    const options = this._options;
     if (!isMultipleOrTagsOrCombobox(props)) {
       extraSelectionProps = {
         onKeyDown: this.onKeyDown,
@@ -811,17 +937,16 @@ const Select = React.createClass({
             {...extraSelectionProps}
           >
             {ctrlNode}
-            {allowClear && !multiple ? clear : null}
+            {allowClear ? clear : null}
             {multiple || !props.showArrow ? null :
               (<span
                 key="arrow"
                 className={`${prefixCls}-arrow`}
                 style={UNSELECTABLE_STYLE}
                 {...UNSELECTABLE_ATTRIBUTE}
-                onMouseDown={preventDefaultEvent}
                 onClick={this.onArrowClick}
               >
-              <b/>
+              <b />
             </span>)}
           </div>
         </div>
@@ -830,4 +955,5 @@ const Select = React.createClass({
   },
 });
 
+Select.displayName = 'Select';
 export default Select;

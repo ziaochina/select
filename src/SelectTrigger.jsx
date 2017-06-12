@@ -1,9 +1,12 @@
 import Trigger from 'rc-trigger';
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import DropdownMenu from './DropdownMenu';
 import ReactDOM from 'react-dom';
 import { isSingleMode } from './util';
+
+Trigger.displayName = 'Trigger';
 
 const BUILT_IN_PLACEMENTS = {
   bottomLeft: {
@@ -24,8 +27,8 @@ const BUILT_IN_PLACEMENTS = {
   },
 };
 
-const SelectTrigger = React.createClass({
-  propTypes: {
+export default class SelectTrigger extends React.Component {
+  static propTypes= {
     onPopupFocus: PropTypes.func,
     dropdownMatchSelectWidth: PropTypes.bool,
     dropdownAlign: PropTypes.object,
@@ -40,8 +43,8 @@ const SelectTrigger = React.createClass({
     prefixCls: PropTypes.string,
     popupClassName: PropTypes.string,
     children: PropTypes.any,
-    dropdownFooter:PropTypes.any
-  },
+    dropdownFooter: PropTypes.any,
+  }
 
   componentDidUpdate() {
     const { visible, dropdownMatchSelectWidth } = this.props;
@@ -52,17 +55,17 @@ const SelectTrigger = React.createClass({
         dropdownDOMNode.style[widthProp] = `${ReactDOM.findDOMNode(this).offsetWidth}px`;
       }
     }
-  },
+  }
 
-  getInnerMenu() {
+  getInnerMenu = () => {
     return this.popupMenu && this.popupMenu.refs.menu;
-  },
+  }
 
-  getPopupDOMNode() {
+  getPopupDOMNode = () => {
     return this.refs.trigger.getPopupDomNode();
-  },
+  }
 
-  getDropdownElement(newProps) {
+  getDropdownElement = (newProps) => {
     const props = this.props;
     return (<DropdownMenu
       ref={this.saveMenu}
@@ -77,24 +80,25 @@ const SelectTrigger = React.createClass({
       enableHideDropdownByClick ={props.enableHideDropdownByClick}
       onPopupVisibleChange={props.onDropdownVisibleChange}
     />);
-  },
+  }
 
-  getDropdownTransitionName() {
+  getDropdownTransitionName = () => {
     const props = this.props;
     let transitionName = props.transitionName;
     if (!transitionName && props.animation) {
       transitionName = `${this.getDropdownPrefixCls()}-${props.animation}`;
     }
     return transitionName;
-  },
+  }
 
-  getDropdownPrefixCls() {
+  getDropdownPrefixCls = () => {
     return `${this.props.prefixCls}-dropdown`;
-  },
+  }
 
-  saveMenu(menu) {
+  saveMenu = (menu) => {
     this.popupMenu = menu;
-  },
+  }
+
   render() {
     const { onPopupFocus, ...props } = this.props;
     const { multiple, visible, inputValue, dropdownAlign,
@@ -135,7 +139,7 @@ const SelectTrigger = React.createClass({
       popupClassName={classnames(popupClassName)}
       popupStyle={props.dropdownStyle}
     >{props.children}</Trigger>);
-  },
-});
+  }
+}
 
-export default SelectTrigger;
+SelectTrigger.displayName = 'SelectTrigger';

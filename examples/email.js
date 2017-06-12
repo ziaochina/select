@@ -1,20 +1,20 @@
 /* eslint no-console: 0 */
 
 import React from 'react';
-import Select, { Option } from 'ziaochina-rc-select';
-import 'ziaochina-rc-select/assets/index.less';
+import Select, { Option } from 'rc-select';
+import 'rc-select/assets/index.less';
 import ReactDOM from 'react-dom';
 
-const Test = React.createClass({
-  getInitialState() {
-    return {
-      options: [],
-    };
-  },
-  onSelect(value) {
+class Test extends React.Component {
+  state = {
+    options: [],
+  };
+
+  onSelect = (value) => {
     console.log('onSelect', value);
-  },
-  onChange(value) {
+  };
+
+  onChange = (value) => {
     console.log('onChange', value);
     let options = [];
     if (value) {
@@ -30,7 +30,8 @@ const Test = React.createClass({
     this.setState({
       options,
     });
-  },
+  };
+
   render() {
     return (<Select
       combobox
@@ -42,7 +43,7 @@ const Test = React.createClass({
     >
       {this.state.options}
     </Select>);
-  },
-});
+  }
+}
 
 ReactDOM.render(<Test />, document.getElementById('__react-content'));

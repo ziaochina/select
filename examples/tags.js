@@ -1,8 +1,8 @@
 /* eslint no-console: 0 */
 
 import React from 'react';
-import Select, { Option } from 'ziaochina-rc-select';
-import 'ziaochina-rc-select/assets/index.less';
+import Select, { Option } from 'rc-select';
+import 'rc-select/assets/index.less';
 import ReactDOM from 'react-dom';
 
 const children = [];
@@ -10,24 +10,25 @@ for (let i = 10; i < 36; i++) {
   children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
 }
 
-const Test = React.createClass({
-  getInitialState() {
-    return {
-      disabled: false,
-      value: ['name2', 'name3'],
-    };
-  },
-  onChange(value) {
+class Test extends React.Component {
+  state = {
+    disabled: false,
+    value: ['name2', 'name3'],
+  };
+
+  onChange = (value) => {
     console.log(`selected ${value}`);
     this.setState({
       value,
     });
-  },
-  toggleDisabled() {
+  };
+
+  toggleDisabled = () => {
     this.setState({
       disabled: !this.state.disabled,
     });
-  },
+  };
+
   render() {
     return (
       <div>
@@ -43,7 +44,7 @@ const Test = React.createClass({
             maxTagTextLength={10}
             value={this.state.value}
             onChange={this.onChange}
-            dropdownFooter={<span><button>ddd</button><button>aaa</button></span>}
+            tokenSeparators={[' ', ',']}
           >
             {children}
           </Select>
@@ -53,7 +54,7 @@ const Test = React.createClass({
         </p>
       </div>
     );
-  },
-});
+  }
+}
 
 ReactDOM.render(<Test />, document.getElementById('__react-content'));

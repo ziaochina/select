@@ -1,24 +1,30 @@
 import React from 'react';
-import { getValuePropValue, UNSELECTABLE_ATTRIBUTE, UNSELECTABLE_STYLE } from './util';
+import {
+  getValuePropValue,
+  defaultFilterFn,
+  UNSELECTABLE_ATTRIBUTE,
+  UNSELECTABLE_STYLE,
+} from './util';
 import { Item as MenuItem, ItemGroup as MenuItemGroup } from 'rc-menu';
 import warning from 'warning';
-import OptGroup from './OptGroup';
-import Option from './Option';
 
 export default {
-  filterOption(input, child) {
+  filterOption(input, child, defaultFilter = defaultFilterFn) {
     if (!input) {
       return true;
     }
-    const filterOption = this.props.filterOption;
+    const filterOption = ('filterOption' in this.props) ?
+      this.props.filterOption : defaultFilter;
     if (!filterOption) {
       return true;
-    }
-    if (child.props.disabled) {
+    } else if (child.props.disabled) {
       return false;
+    } else if (typeof filterOption === 'function') {
+      return filterOption.call(this, input, child);
     }
-    return filterOption.call(this, input, child);
+    return true;
   },
+
   renderFilterOptions(inputValue) {
     return this.renderFilterOptionsFromChildren(this.props.children, true, inputValue);
   },
@@ -30,7 +36,7 @@ export default {
     const childrenKeys = [];
     const tags = props.tags;
     React.Children.forEach(children, (child) => {
-      if (child.type === OptGroup) {
+      if (child.type.isSelectOptGroup) {
         const innerItems = this.renderFilterOptionsFromChildren(child.props.children, false);
         if (innerItems.length) {
           let label = child.props.label;
@@ -48,7 +54,7 @@ export default {
       }
 
       warning(
-        child.type === Option,
+        child.type.isSelectOption,
         'the children of `Select` should be `Select.Option` or `Select.OptGroup`, ' +
           `instead of \`${child.type.name || child.type.displayName || child.type}\`.`
       );
@@ -87,7 +93,9 @@ export default {
       }));
       if (inputValue) {
         const notFindInputItem = sel.every((option) => {
-          return getValuePropValue(option) !== inputValue;
+          return !this.filterOption.call(this, inputValue, option, () =>
+            getValuePropValue(option) === inputValue
+          );
         });
         if (notFindInputItem) {
           sel.unshift(<MenuItem

@@ -1,7 +1,7 @@
 /* eslint no-console: 0 */
 import React from 'react';
-import Select, { Option } from 'ziaochina-rc-select';
-import 'ziaochina-rc-select/assets/index.less';
+import Select, { Option } from 'rc-select';
+import 'rc-select/assets/index.less';
 import ReactDOM from 'react-dom';
 
 const children = [];
@@ -10,16 +10,16 @@ for (let i = 10; i < 36; i++) {
   children.push(<Option disabled={i === 11} key={i.toString(36) + i}>中文{i}</Option>);
 }
 
-const Test = React.createClass({
-  getInitialState() {
-    return {
-      value: ['b11'],
-    };
-  },
-  onChange(value) {
+class Test extends React.Component {
+  state = {
+    value: ['b11'],
+  };
+
+  onChange = (value) => {
     console.log('onChange', value);
     this.setState({ value });
-  },
+  };
+
   render() {
     const dropdownMenuStyle = {
       maxHeight: 200,
@@ -46,7 +46,7 @@ const Test = React.createClass({
         </div>
       </div>
     );
-  },
-});
+  }
+}
 
 ReactDOM.render(<Test />, document.getElementById('__react-content'));
