@@ -109,6 +109,11 @@ var Test = function (_React$Component) {
                   null,
                   'aaa'
                 )
+              ),
+              suffix: __WEBPACK_IMPORTED_MODULE_4_react___default.a.createElement(
+                'button',
+                null,
+                'ddd'
               )
             },
             children

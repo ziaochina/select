@@ -15100,6 +15100,12 @@ var Select = __WEBPACK_IMPORTED_MODULE_4_create_react_class___default()({
         );
       }
     }
+
+    var innerNodes = [innerNode];
+    if (this.props.suffix) {
+      innerNodes.push(this.props.suffix);
+    }
+
     return __WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement(
       'div',
       {
@@ -15109,7 +15115,7 @@ var Select = __WEBPACK_IMPORTED_MODULE_4_create_react_class___default()({
         }
       },
       this.getPlaceholderElement(),
-      innerNode
+      innerNodes
     );
   },
   render: function render() {
