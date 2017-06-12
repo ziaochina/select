@@ -2,8 +2,8 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Select, { Option } from 'rc-select';
-import 'rc-select/assets/index.less';
+import Select, { Option } from 'ziaochina-rc-select';
+import 'ziaochina-rc-select/assets/index.less';
 
 class Demo extends React.Component {
   state = {

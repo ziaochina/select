@@ -1,8 +1,8 @@
 /* eslint no-console: 0 */
 
 import React from 'react';
-import Select, { Option } from 'rc-select';
-import 'rc-select/assets/index.less';
+import Select, { Option } from 'ziaochina-rc-select';
+import 'ziaochina-rc-select/assets/index.less';
 import ReactDOM from 'react-dom';
 
 const children = [];
@@ -45,6 +45,7 @@ class Test extends React.Component {
             value={this.state.value}
             onChange={this.onChange}
             tokenSeparators={[' ', ',']}
+            dropdownFooter={<span><button>ddd</button><button>aaa</button></span>}
           >
             {children}
           </Select>
