@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>multiple.js - example - ziaochina-rc-select@0.0.4</title>
+  <title>multiple.js - example - ziaochina-rc-select@0.1.0</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -257,13 +257,13 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
     document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
   }
   </script>
-  <link rel="stylesheet" href="common.css" />
+  <link rel="stylesheet" href="../common.css" />
 </head>
 
 <body>
   <div class="container">
     <div class="header">
-      <h1>ziaochina-rc-select@0.0.4</h1>
+      <h1>ziaochina-rc-select@0.1.0</h1>
 
       <p>React Select</p>
     </div>
@@ -278,35 +278,40 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 
 <span class="hljs-keyword">const</span> children = [];
 <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">10</span>; i &lt; <span class="hljs-number">36</span>; i++) {
-  children.push(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Option</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">{i.toString(36)</span> + <span class="hljs-attribute">i</span>}&gt;</span>中文{i}<span class="hljs-tag">&lt;/<span class="hljs-title">Option</span>&gt;</span>)</span>;
+  children.push(
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Option</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">{i.toString(36)</span> + <span class="hljs-attribute">i</span>} <span class="hljs-attribute">disabled</span>=<span class="hljs-value">{i</span> =<span class="hljs-value">==</span> <span class="hljs-attribute">10</span>} <span class="hljs-attribute">title</span>=<span class="hljs-value">{`中文${i}`}</span>&gt;</span>
+      中文{i}
+    <span class="hljs-tag">&lt;/<span class="hljs-title">Option</span>&gt;</span>
+  )</span>;
 }
 
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onSelect</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">arguments</span>);
-}
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Test</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span> </span>{
+  state = {
+    useAnim: <span class="hljs-number">0</span>,
+    value: [<span class="hljs-string">'a10'</span>],
+  }
 
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onDeselect</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">arguments</span>);
-}
-
-<span class="hljs-keyword">const</span> Test = React.createClass({
-  getInitialState() {
-    <span class="hljs-keyword">return</span> {
-      useAnim: <span class="hljs-number">0</span>,
-      value: [],
-    };
-  },
-  onChange(value) {
+  onChange = (value) =&gt; {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'onChange'</span>, value);
     <span class="hljs-keyword">this</span>.setState({
       value,
     });
-  },
-  useAnim(e) {
+  }
+
+  onSelect = (...args) =&gt; {
+    <span class="hljs-built_in">console</span>.log(args);
+  }
+
+  onDeselect = (...args) =&gt; {
+    <span class="hljs-built_in">console</span>.log(args);
+  }
+
+  useAnim = (e) =&gt; {
     <span class="hljs-keyword">this</span>.setState({
       useAnim: e.target.checked,
     });
-  },
+  }
+
   render() {
     <span class="hljs-keyword">const</span> dropdownMenuStyle = {
       maxHeight: <span class="hljs-number">200</span>,
@@ -319,32 +324,35 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
         <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span>&gt;</span>
             anim
-            <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">checked</span>=<span class="hljs-value">{this.state.useAnim}</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"checkbox"</span> <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{this.useAnim}</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">checked</span>=<span class="hljs-value">{this.state.useAnim}</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"checkbox"</span> <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{this.useAnim}</span> /&gt;</span>
           <span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
 
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{{</span> <span class="hljs-attribute">width:</span> <span class="hljs-attribute">300</span> }}&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-title">Select</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">Select</span>
             <span class="hljs-attribute">value</span>=<span class="hljs-value">{this.state.value}</span>
             <span class="hljs-attribute">animation</span>=<span class="hljs-value">{this.state.useAnim</span> ? '<span class="hljs-attribute">slide-up</span>' <span class="hljs-attribute">:</span> <span class="hljs-attribute">null</span>}
             <span class="hljs-attribute">choiceTransitionName</span>=<span class="hljs-value">"rc-select-selection__choice-zoom"</span>
             <span class="hljs-attribute">dropdownMenuStyle</span>=<span class="hljs-value">{dropdownMenuStyle}</span>
             <span class="hljs-attribute">style</span>=<span class="hljs-value">{{</span> <span class="hljs-attribute">width:</span> <span class="hljs-attribute">500</span> }}
             <span class="hljs-attribute">multiple</span>
+            <span class="hljs-attribute">allowClear</span>
             <span class="hljs-attribute">optionFilterProp</span>=<span class="hljs-value">"children"</span>
             <span class="hljs-attribute">optionLabelProp</span>=<span class="hljs-value">"children"</span>
-            <span class="hljs-attribute">onSelect</span>=<span class="hljs-value">{onSelect}</span>
-            <span class="hljs-attribute">onDeselect</span>=<span class="hljs-value">{onDeselect}</span>
+            <span class="hljs-attribute">onSelect</span>=<span class="hljs-value">{this.onSelect}</span>
+            <span class="hljs-attribute">onDeselect</span>=<span class="hljs-value">{this.onDeselect}</span>
             <span class="hljs-attribute">placeholder</span>=<span class="hljs-value">"please select"</span>
             <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{this.onChange}</span>
-          &gt;</span>
+            <span class="hljs-attribute">onFocus</span>=<span class="hljs-value">{()</span> =&gt;</span> console.log('focus')}
+            tokenSeparators={[' ', ',']}
+          &gt;
             {children}
           <span class="hljs-tag">&lt;/<span class="hljs-title">Select</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
       <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
     )</span>;
-  },
-});
+  }
+}
 
 ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Test</span> /&gt;</span>, document.getElementById('__react-content'));
 </span></code></pre></div>
@@ -356,7 +364,7 @@ ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-t
          data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
   </a>
   <script>FastClick.attach(document.body);</script>
-  <script src="common.js?nowrap"></script>
+  <script src="../common.js?nowrap"></script>
   <script src="multiple.js?nowrap"></script>
 </body>
 

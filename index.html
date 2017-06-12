@@ -7,7 +7,7 @@
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css" rel="stylesheet"/>
-  <title>ziaochina-rc-select@0.0.4 - React Select</title>
+  <title>ziaochina-rc-select@0.1.0 - React Select</title>
   <style>
     @font-face {
       font-family: octicons-anchor;
@@ -737,40 +737,40 @@
 
 <body>
 <div class="header">
-  <h1>ziaochina-rc-select@0.0.4</h1>
+  <h1>ziaochina-rc-select@0.1.0</h1>
 </div>
 <div class="examples">
   <h3>EXAMPLES</h3>
   <div class="examples-body">
     <ul>
       
-      <li><a href="examples/combobox.html">combobox</a></li>
+      <li><a href="examples\combobox.html">combobox</a></li>
       
-      <li><a href="examples/email.html">email</a></li>
+      <li><a href="examples\email.html">email</a></li>
       
-      <li><a href="examples/force-suggest.html">force-suggest</a></li>
+      <li><a href="examples\force-suggest.html">force-suggest</a></li>
       
-      <li><a href="examples/getPopupContainer.html">getPopupContainer</a></li>
+      <li><a href="examples\getPopupContainer.html">getPopupContainer</a></li>
       
-      <li><a href="examples/mul-suggest.html">mul-suggest</a></li>
+      <li><a href="examples\mul-suggest.html">mul-suggest</a></li>
       
-      <li><a href="examples/mul-tag-suggest.html">mul-tag-suggest</a></li>
+      <li><a href="examples\mul-tag-suggest.html">mul-tag-suggest</a></li>
       
-      <li><a href="examples/multiple-readonly.html">multiple-readonly</a></li>
+      <li><a href="examples\multiple-readonly.html">multiple-readonly</a></li>
       
-      <li><a href="examples/multiple.html">multiple</a></li>
+      <li><a href="examples\multiple.html">multiple</a></li>
       
-      <li><a href="examples/optgroup.html">optgroup</a></li>
+      <li><a href="examples\optgroup.html">optgroup</a></li>
       
-      <li><a href="examples/optionFilterProp.html">optionFilterProp</a></li>
+      <li><a href="examples\optionFilterProp.html">optionFilterProp</a></li>
       
-      <li><a href="examples/single-animation.html">single-animation</a></li>
+      <li><a href="examples\single-animation.html">single-animation</a></li>
       
-      <li><a href="examples/single.html">single</a></li>
+      <li><a href="examples\single.html">single</a></li>
       
-      <li><a href="examples/suggest.html">suggest</a></li>
+      <li><a href="examples\suggest.html">suggest</a></li>
       
-      <li><a href="examples/tags.html">tags</a></li>
+      <li><a href="examples\tags.html">tags</a></li>
       
     </ul>
   </div>
@@ -880,6 +880,12 @@ React.render(c, container);</code></pre></div><h2>API<a id="user-content-api" na
 <td>&#39;Not Found&#39;</td>
 </tr>
 <tr>
+<td>tokenSeparators</td>
+<td>separator used to tokenize on tag/multiple mode</td>
+<td>string[]?</td>
+<td></td>
+</tr>
+<tr>
 <td>placeholder</td>
 <td>select placeholder</td>
 <td>React Node</td>
@@ -982,6 +988,18 @@ React.render(c, container);</code></pre></div><h2>API<a id="user-content-api" na
 <td>-</td>
 </tr>
 <tr>
+<td>onBlur</td>
+<td>called when blur</td>
+<td>function</td>
+<td>-</td>
+</tr>
+<tr>
+<td>onFocus</td>
+<td>called when focus</td>
+<td>function</td>
+<td>-</td>
+</tr>
+<tr>
 <td>onSelect</td>
 <td>called when a option is selected. param is option&#39;s value and option instance</td>
 <td>Function(value, option:Option)</td>
@@ -1004,6 +1022,12 @@ React.render(c, container);</code></pre></div><h2>API<a id="user-content-api" na
 <td>container which popup select menu rendered into</td>
 <td>function(trigger:Node):Node</td>
 <td>function(){return document.body;}</td>
+</tr>
+<tr>
+<td>getInputElement</td>
+<td>customize input element</td>
+<td>function(): Element</td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
@@ -1038,6 +1062,12 @@ React.render(c, container);</code></pre></div><h2>API<a id="user-content-api" na
 <tr>
 <td>value</td>
 <td>default filter by this attribute. if react want you to set key, then key is same as value, you can omit value</td>
+<td>String</td>
+<td>-</td>
+</tr>
+<tr>
+<td>title</td>
+<td>if you are not satisfied with auto-generated <code>title</code> which is show while hovering on selected value, you can customize it with this property</td>
 <td>String</td>
 <td>-</td>
 </tr>
@@ -1076,9 +1106,7 @@ React.render(c, container);</code></pre></div><h2>API<a id="user-content-api" na
 <h2>Development<a id="user-content-development" name="development" class="anchor" aria-hidden="true" href="#development"><span class="octicon octicon-link"></span></a></h2><div class="highlight"><pre><code language="undefined">npm install
 npm start</code></pre></div><h2>Example<a id="user-content-example" name="example" class="anchor" aria-hidden="true" href="#example"><span class="octicon octicon-link"></span></a></h2><p><a href="http://localhost:8003/examples/" title="null">http://localhost:8003/examples/</a></p>
 <p>online example: <a href="http://react-component.github.io/select/examples/" title="null">http://react-component.github.io/select/examples/</a></p>
-<h2>Test Case<a id="user-content-test-case" name="test-case" class="anchor" aria-hidden="true" href="#test-case"><span class="octicon octicon-link"></span></a></h2><p><a href="http://localhost:8003/tests/runner.html?coverage" title="null">http://localhost:8003/tests/runner.html?coverage</a></p>
-<h2>Coverage<a id="user-content-coverage" name="coverage" class="anchor" aria-hidden="true" href="#coverage"><span class="octicon octicon-link"></span></a></h2><p><a href="http://localhost:8003/node_modules/rc-server/node_modules/node-jscover/lib/front-end/jscoverage.html?w=http://localhost:8003/tests/runner.html?coverage" title="null">http://localhost:8003/node_modules/rc-server/node_modules/node-jscover/lib/front-end/jscoverage.html?w=http://localhost:8003/tests/runner.html?coverage</a></p>
-<h2>License<a id="user-content-license" name="license" class="anchor" aria-hidden="true" href="#license"><span class="octicon octicon-link"></span></a></h2><p>rc-select is released under the MIT license.</p>
+<h2>Test Case<a id="user-content-test-case" name="test-case" class="anchor" aria-hidden="true" href="#test-case"><span class="octicon octicon-link"></span></a></h2><div class="highlight"><pre><code language="undefined">npm test</code></pre></div><h2>Coverage<a id="user-content-coverage" name="coverage" class="anchor" aria-hidden="true" href="#coverage"><span class="octicon octicon-link"></span></a></h2><div class="highlight"><pre><code language="undefined">npm run coverage</code></pre></div><h2>License<a id="user-content-license" name="license" class="anchor" aria-hidden="true" href="#license"><span class="octicon octicon-link"></span></a></h2><p>rc-select is released under the MIT license.</p>
 
   </div>
 </div>

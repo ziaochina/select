@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>single.js - example - ziaochina-rc-select@0.0.4</title>
+  <title>single.js - example - ziaochina-rc-select@0.1.0</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -257,13 +257,13 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
     document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
   }
   </script>
-  <link rel="stylesheet" href="common.css" />
+  <link rel="stylesheet" href="../common.css" />
 </head>
 
 <body>
   <div class="container">
     <div class="header">
-      <h1>ziaochina-rc-select@0.0.4</h1>
+      <h1>ziaochina-rc-select@0.1.0</h1>
 
       <p>React Select</p>
     </div>
@@ -276,15 +276,13 @@ import Select, { Option } from 'ziaochina-rc-select';
 import 'ziaochina-rc-select/assets/index.css';
 import ReactDOM from 'react-dom';
 
-const Test = React.createClass({
-  getInitialState() {
-    return {
-      destroy: false,
-      value: String(9),
-    };
-  },
+class Test extends React.Component {
+  state = {
+    destroy: false,
+    value: String(9),
+  };
 
-  onChange(e) {
+  onChange = (e) =&gt; {
     let value;
     if (e &amp;&amp; e.target) {
       value = e.target.value;
@@ -295,17 +293,21 @@ const Test = React.createClass({
     this.setState({
       value,
     });
-  },
+  };
 
-  onDestroy() {
+  onDestroy = () =&gt; {
     this.setState({
       destroy: 1,
     });
-  },
+  };
 
-  onBlur(v) {
+  onBlur = (v) =&gt; {
     console.log('onBlur', v);
-  },
+  };
+
+  onFocus = () =&gt; {
+    console.log('onFocus');
+  };
 
   render() {
     if (this.state.destroy) {
@@ -324,12 +326,13 @@ const Test = React.createClass({
             dropdownMenuStyle={{ maxHeight: 200, overflow: 'auto' }}
             style={{ width: 500 }}
             onBlur={this.onBlur}
+            onFocus={this.onFocus}
             allowClear
             optionLabelProp="children"
             optionFilterProp="text"
             onChange={this.onChange}
           &gt;
-            &lt;Option value="01" text="jack"&gt;
+            &lt;Option value="01" text="jack" title="jack"&gt;
               &lt;b
                 style={{
                   color: 'red',
@@ -367,8 +370,8 @@ const Test = React.createClass({
         &lt;/p&gt;
       &lt;/div&gt;
     );
-  },
-});
+  }
+}
 
 ReactDOM.render(&lt;Test /&gt;, document.getElementById('__react-content'));
 </code></pre></div>
@@ -380,7 +383,7 @@ ReactDOM.render(&lt;Test /&gt;, document.getElementById('__react-content'));
          data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
   </a>
   <script>FastClick.attach(document.body);</script>
-  <script src="common.js?nowrap"></script>
+  <script src="../common.js?nowrap"></script>
   <script src="single.js?nowrap"></script>
 </body>
 
