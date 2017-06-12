@@ -46,6 +46,7 @@ class Test extends React.Component {
             onChange={this.onChange}
             tokenSeparators={[' ', ',']}
             dropdownFooter={<span><button>ddd</button><button>aaa</button></span>}
+            suffix={<button>ddd</button>}
           >
             {children}
           </Select>

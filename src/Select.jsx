@@ -841,12 +841,18 @@ const Select = createClass({
         innerNode = <ul>{selectedValueNodes}</ul>;
       }
     }
+
+    const innerNodes = [innerNode];
+    if (this.props.suffix) {
+      innerNodes.push(this.props.suffix);
+    }
+
     return (<div
       className={className}
       ref={node => this.topCtrlNode = node}
     >
       {this.getPlaceholderElement()}
-      {innerNode}
+      {innerNodes}
     </div>);
   },
 
