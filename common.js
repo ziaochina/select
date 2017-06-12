@@ -13801,6 +13801,9 @@ var DropdownMenu = function (_React$Component) {
     key: 'handleFooterClick',
     value: function handleFooterClick() {
       if (this.props.enableHideDropdownByClick) {
+        if (typeof document !== 'undefined' && document.activeElement) {
+          document.activeElement.blur();
+        }
         this.props.onPopupVisibleChange(false);
       }
     }
